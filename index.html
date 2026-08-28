@@ -323,6 +323,19 @@ body::after{
       <div class="nav-item" onclick="showPage('impressao')" id="nav-impressao">
         <span>🖨️</span><span>Imprimir Entrevistas</span>
       </div>
+      <div class="nav-sec">Ciclos</div>
+      <div class="nav-item" onclick="showCiclo('Educação Infantil')" id="nav-ciclo-infantil">
+        <span>🎒</span><span>Educação Infantil</span>
+      </div>
+      <div class="nav-item" onclick="showCiclo('Fundamental 1')" id="nav-ciclo-fund1">
+        <span>📚</span><span>Fundamental 1</span>
+      </div>
+      <div class="nav-item" onclick="showCiclo('Fundamental 2')" id="nav-ciclo-fund2">
+        <span>📖</span><span>Fundamental 2</span>
+      </div>
+      <div class="nav-item" onclick="showCiclo('Ensino Médio')" id="nav-ciclo-em">
+        <span>🎓</span><span>Ensino Médio</span>
+      </div>
       <div class="nav-sec">Dados</div>
       <div class="nav-item" onclick="showPage('backup')" id="nav-backup">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Backup dos Dados
@@ -381,7 +394,7 @@ body::after{
       <div id="page-cadastro" style="display:none">
         <div class="sec-hdr"><div><div class="sec-title">Cadastrar Entrevista</div><div class="sec-sub">Preencha os dados da entrevista</div></div></div>
         <div class="alert alert-success" id="alertOk">✅ Entrevista cadastrada com sucesso!</div>
-        <div class="alert alert-error" id="alertErr">⚠️ Preencha os campos obrigatórios: Nome, Ano/Turma e Como Conheceu a Miró.</div>
+        <div class="alert alert-error" id="alertErr">⚠️ Preencha os campos obrigatórios: Nome, Ano/Turma, Ciclo e Como Conheceu a Miró.</div>
         <div class="card">
           <div class="card-title">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Dados da Entrevista
@@ -423,6 +436,16 @@ body::after{
                 <option>Sala 1</option>
                 <option>Sala 2</option>
                 <option>Sala Apoio</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ciclo <span class="req">*</span></label>
+              <select class="form-control" id="f-ciclo">
+                <option value="">Selecione...</option>
+                <option>Educação Infantil</option>
+                <option>Fundamental 1</option>
+                <option>Fundamental 2</option>
+                <option>Ensino Médio</option>
               </select>
             </div>
             <div class="form-group">
@@ -521,6 +544,16 @@ body::after{
                 <option value="Outro">Outro</option>
               </select>
             </div>
+            <div class="form-group">
+              <label class="form-label">Ciclo</label>
+              <select class="form-control" id="r-ciclo">
+                <option value="">Todos</option>
+                <option>Educação Infantil</option>
+                <option>Fundamental 1</option>
+                <option>Fundamental 2</option>
+                <option>Ensino Médio</option>
+              </select>
+            </div>
             <div style="display:flex;gap:8px;padding-bottom:1px">
               <button class="btn btn-primary" onclick="filtrar()">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Filtrar
@@ -550,6 +583,8 @@ body::after{
               <select class="form-control" id="gf-con"><option value="">Todos</option><option>Instagram</option><option>Facebook</option><option>Google</option><option>Indicação</option><option>Outro</option></select></div>
             <div><label class="form-label" style="font-size:11px">Turma</label>
               <select class="form-control" id="gf-ano"><option value="">Todas</option><option>Grupo 1</option><option>Grupo 2</option><option>Grupo 3</option><option>Grupo 4</option><option>Grupo 5</option><option>1º Ano</option><option>2º Ano</option><option>3º Ano</option><option>4º Ano</option><option>5º Ano</option><option>6º Ano</option><option>7º Ano</option><option>8º Ano</option><option>9º Ano</option><option>1º ANO EM</option><option>2º ANO EM</option><option>3º ANO EM</option></select></div>
+            <div><label class="form-label" style="font-size:11px">Ciclo</label>
+              <select class="form-control" id="gf-ciclo"><option value="">Todos</option><option>Educação Infantil</option><option>Fundamental 1</option><option>Fundamental 2</option><option>Ensino Médio</option></select></div>
             <div style="display:flex;gap:8px">
               <button class="btn btn-primary btn-sm" onclick="renderCharts()">Filtrar</button>
               <button class="btn btn-secondary btn-sm" onclick="limparFiltrosGraf()">Limpar</button>
@@ -565,6 +600,7 @@ body::after{
         <div class="charts-grid">
           <div class="chart-card"><div class="chart-title">📱 Como Conheceu a Miró</div><div class="chart-container"><canvas id="cConheceu"></canvas></div></div>
           <div class="chart-card"><div class="chart-title">✅ Matrículas Realizadas</div><div class="chart-container"><canvas id="cMat"></canvas></div></div>
+          <div class="chart-card"><div class="chart-title">🎓 Entrevistas por Ciclo</div><div class="chart-container"><canvas id="cCiclo"></canvas></div></div>
           <div class="chart-card full"><div class="chart-title">📚 Entrevistas por Ano / Turma Pretendido</div><div class="chart-container" style="height:300px"><canvas id="cAno"></canvas></div></div>
           <div class="chart-card full"><div class="chart-title">⏳ Status das Entrevistas</div><div class="chart-container"><canvas id="cStatus"></canvas></div></div>
           <div class="chart-card full"><div class="chart-title">👩‍💼 Entrevistas por Coordenadora</div><div class="chart-container" style="height:300px"><canvas id="cCoord"></canvas></div></div>
@@ -622,6 +658,22 @@ body::after{
         <div id="ip-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px"></div>
       </div>
 
+      <!-- CICLO (dinâmico) -->
+      <div id="page-ciclo" style="display:none">
+        <div class="sec-hdr">
+          <div><div class="sec-title" id="ciclo-title">Ciclo</div><div class="sec-sub" id="ciclo-sub">Entrevistas do ciclo selecionado</div></div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-warning" onclick="gerarPDF()">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Gerar PDF
+            </button>
+          </div>
+        </div>
+        <div class="stats-grid" id="ciclo-stats"></div>
+        <div class="card">
+          <div class="card-title" id="cicloRelTitulo">📋 Registros do Ciclo</div>
+          <div class="table-wrap" id="cicloTabela"></div>
+        </div>
+      </div>
 
       <!-- BACKUP -->
       <div id="page-backup" style="display:none">
@@ -878,6 +930,7 @@ function escutarEntrevistas() {
         if (pageId === 'relatorio') filtrar();
         if (pageId === 'graficos') renderCharts();
         if (pageId === 'impressao') renderImpressao();
+        if (pageId === 'ciclo' && _cicloAtual) renderCiclo(_cicloAtual);
       }
       atualizarCount();
     }, function(error) {
@@ -891,7 +944,8 @@ async function salvar() {
   const nome = document.getElementById('f-nome').value.trim();
   const ano = document.getElementById('f-ano').value;
   const con = document.getElementById('f-con').value;
-  if (!nome || !ano || !con) { showAlert('alertErr'); return; }
+  const ciclo = document.getElementById('f-ciclo').value;
+  if (!nome || !ano || !con || !ciclo) { showAlert('alertErr'); return; }
   
   const outro = document.getElementById('f-outro').value.trim();
   const hoje = new Date().toISOString().split('T')[0];
@@ -909,6 +963,7 @@ async function salvar() {
       sala: document.getElementById('f-sala') ? document.getElementById('f-sala').value : '',
       mat: document.getElementById('f-mat').value,
       con: con === 'Outro' ? ('Outro: ' + (outro || 'não especificado')) : con,
+      ciclo: ciclo,
       st: document.getElementById('f-st').value || 'Agendou a entrevista',
       obs: document.getElementById('f-obs').value,
       criadoPor: currentUser ? currentUser.email : '',
@@ -935,6 +990,7 @@ async function salvarEdit() {
       tel: document.getElementById('e-tel').value,
       data: document.getElementById('e-data').value,
       sala: document.getElementById('e-sala') ? document.getElementById('e-sala').value : '',
+      ciclo: document.getElementById('e-ciclo') ? document.getElementById('e-ciclo').value : '',
       ano: document.getElementById('e-ano').value,
       mat: document.getElementById('e-mat').value,
       st: document.getElementById('e-st').value,
@@ -994,6 +1050,7 @@ async function importarJSON(input) {
           ano: v.ano || '',
           coord: v.coord || '',
           sala: v.sala || '',
+          ciclo: v.ciclo || '',
           mat: v.mat || '',
           con: v.con || '',
           st: v.st || '',
@@ -1076,19 +1133,80 @@ function alterarSenhaUser() {
 }
 
 // ══ NAV ══
+var _cicloAtual = '';
 function showPage(p) {
-  ['dashboard','cadastro','relatorio','graficos','impressao','backup','usuarios'].forEach(function(x) {
-    document.getElementById('page-'+x).style.display = x===p ? 'block' : 'none';
-    var nav = document.getElementById('nav-'+x);
-    if (nav) nav.classList.toggle('active', x===p);
+  ['dashboard','cadastro','relatorio','graficos','impressao','backup','usuarios','ciclo'].forEach(function(x) {
+    var el = document.getElementById('page-'+x);
+    if (el) el.style.display = x===p ? 'block' : 'none';
   });
+  // desativar nav items normais
+  ['dashboard','cadastro','relatorio','graficos','impressao','backup','usuarios'].forEach(function(x){
+    var nav = document.getElementById('nav-'+x);
+    if (nav) nav.classList.remove('active');
+  });
+  // desativar nav items de ciclo
+  ['infantil','fund1','fund2','em'].forEach(function(x){
+    var nav = document.getElementById('nav-ciclo-'+x);
+    if (nav) nav.classList.remove('active');
+  });
+  // ativar o nav item correto
+  var navAtivo = document.getElementById('nav-'+p);
+  if (navAtivo) navAtivo.classList.add('active');
+  _cicloAtual = '';
   var t = {dashboard:'Dashboard',cadastro:'Cadastrar Entrevista',relatorio:'Relatório de Entrevistas',graficos:'Gráficos & Análises',impressao:'Imprimir Entrevistas',backup:'Backup dos Dados',usuarios:'Gerenciar Usuários'};
-  document.getElementById('topbarTitle').textContent = t[p];
+  document.getElementById('topbarTitle').textContent = t[p] || '';
   if (p === 'dashboard') renderDash();
   if (p === 'relatorio') filtrar();
   if (p === 'graficos') renderCharts();
   if (p === 'impressao') renderImpressao();
   if (p === 'usuarios') renderUsuarios();
+}
+
+function showCiclo(ciclo) {
+  _cicloAtual = ciclo;
+  // esconder todas as páginas
+  ['dashboard','cadastro','relatorio','graficos','impressao','backup','usuarios','ciclo'].forEach(function(x){
+    var el = document.getElementById('page-'+x);
+    if (el) el.style.display = 'none';
+  });
+  // desativar todos os nav items
+  ['dashboard','cadastro','relatorio','graficos','impressao','backup','usuarios'].forEach(function(x){
+    var nav = document.getElementById('nav-'+x);
+    if (nav) nav.classList.remove('active');
+  });
+  ['infantil','fund1','fund2','em'].forEach(function(x){
+    var nav = document.getElementById('nav-ciclo-'+x);
+    if (nav) nav.classList.remove('active');
+  });
+  // ativar nav do ciclo
+  var cicloMap = {'Educação Infantil':'infantil','Fundamental 1':'fund1','Fundamental 2':'fund2','Ensino Médio':'em'};
+  var navCiclo = document.getElementById('nav-ciclo-'+cicloMap[ciclo]);
+  if (navCiclo) navCiclo.classList.add('active');
+  // mostrar página do ciclo
+  document.getElementById('page-ciclo').style.display = 'block';
+  document.getElementById('topbarTitle').textContent = ciclo;
+  renderCiclo(ciclo);
+}
+
+function renderCiclo(ciclo) {
+  var dados = DB.filter(function(v){return v.ciclo === ciclo;});
+  var icones = {'Educação Infantil':'🎒','Fundamental 1':'📚','Fundamental 2':'📖','Ensino Médio':'🎓'};
+  var icon = icones[ciclo] || '📋';
+  document.getElementById('ciclo-title').textContent = icon + ' ' + ciclo;
+  document.getElementById('ciclo-sub').textContent = dados.length + ' entrevista(s) neste ciclo';
+  // stats
+  var totalMat = dados.filter(function(v){return v.mat==='Sim';}).length;
+  var totalAg = dados.filter(function(v){return v.st==='Agendou a entrevista';}).length;
+  var totalReal = dados.filter(function(v){return v.st==='Realizou a entrevista';}).length;
+  var totalWait = dados.filter(function(v){return v.st==='Aguardando retorno da agenda';}).length;
+  var pct = dados.length ? Math.round(totalMat/dados.length*100) : 0;
+  document.getElementById('ciclo-stats').innerHTML =
+    '<div class="stat-card blue"><div class="stat-label">Total</div><div class="stat-value">'+dados.length+'</div><div class="stat-sub">entrevistas</div></div>'+
+    '<div class="stat-card gold"><div class="stat-label">Matrículas</div><div class="stat-value">'+totalMat+'</div><div class="stat-sub">'+pct+'% conversão</div></div>'+
+    '<div class="stat-card green"><div class="stat-label">Agendadas</div><div class="stat-value">'+totalAg+'</div><div class="stat-sub">entrevistas</div></div>'+
+    '<div class="stat-card orange"><div class="stat-label">Aguardando</div><div class="stat-value">'+totalWait+'</div><div class="stat-sub">retorno</div></div>';
+  document.getElementById('cicloRelTitulo').textContent = icon + ' ' + dados.length + ' registro(s) — ' + ciclo;
+  document.getElementById('cicloTabela').innerHTML = buildTable(dados, true, '');
 }
 
 // ══ RADIO ══
@@ -1126,7 +1244,8 @@ function salvar(){
   const nome=document.getElementById('f-nome').value.trim();
   const ano=document.getElementById('f-ano').value;
   const con=document.getElementById('f-con').value;
-  if(!nome||!ano||!con){showAlert('alertErr');return;}
+  const ciclo=document.getElementById('f-ciclo').value;
+  if(!nome||!ano||!con||!ciclo){showAlert('alertErr');return;}
   const outro=document.getElementById('f-outro').value.trim();
   const hoje=new Date().toISOString().split('T')[0];
   DB=loadDB();
@@ -1142,6 +1261,7 @@ function salvar(){
     sala:document.getElementById('f-sala')?document.getElementById('f-sala').value:'',
     mat:document.getElementById('f-mat').value,
     con:con==='Outro'?('Outro: '+(outro||'não especificado')):con,
+    ciclo,
     st:document.getElementById('f-st').value||'Agendou a entrevista',
     obs:document.getElementById('f-obs').value
   });
@@ -1155,7 +1275,7 @@ function salvar(){
 }
 function limpar(){
   ['f-nome','f-tel','f-aluno','f-obs','f-outro','f-coord-outro'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  ['f-ano','f-mat','f-coord','f-sala'].forEach(id=>{var e=document.getElementById(id);if(e)e.value='';});
+  ['f-ano','f-mat','f-coord','f-sala','f-ciclo'].forEach(id=>{var e=document.getElementById(id);if(e)e.value='';});
   document.getElementById('f-data').value=new Date().toISOString().split('T')[0];
   document.getElementById('f-dataagendada').value='';
   document.getElementById('f-coord-outro').style.display='none';
@@ -1206,6 +1326,7 @@ function buildTable(data, showEdit, term){
       '<td><strong>'+hilite(v.nome,t)+'</strong></td>'+
       '<td>'+hilite(v.aluno||'—',t)+'</td>'+
       '<td>'+hilite(v.tel,t)+'</td>'+
+      '<td>'+(v.ciclo||'—')+'</td>'+
       '<td>'+(v.ano||'—')+'</td>'+
       '<td>'+esc(v.con||'—')+'</td>'+
       '<td>'+matBadge(v.mat)+'</td>'+
@@ -1213,7 +1334,7 @@ function buildTable(data, showEdit, term){
       (showEdit?'<td><button class="btn btn-secondary btn-sm" onclick="openEdit('+idx+')">✏️</button></td>':'')+
       '</tr>';
   }).join('');
-  return'<table><thead><tr><th>Data</th><th>Nome do Responsável</th><th>Aluno</th><th>Telefone</th><th>Ano/Turma</th><th>Como Conheceu</th><th>Matriculou</th><th>Status</th>'+(showEdit?'<th>Ação</th>':'')+'</tr></thead><tbody>'+rows+'</tbody></table>';
+  return'<table><thead><tr><th>Data</th><th>Nome do Responsável</th><th>Aluno</th><th>Telefone</th><th>Ciclo</th><th>Ano/Turma</th><th>Como Conheceu</th><th>Matriculou</th><th>Status</th>'+(showEdit?'<th>Ação</th>':'')+'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 // ══ FILTRO + BUSCA ══
@@ -1226,6 +1347,7 @@ function filtrar() {
   var st = document.getElementById('r-st')?.value;
   var mat = document.getElementById('r-mat')?.value;
   var coord = document.getElementById('r-coord')?.value;
+  var ciclo = document.getElementById('r-ciclo')?.value;
   if (busca) d = d.filter(function(v){return (v.nome||'').toLowerCase().includes(busca)||(v.tel||'').includes(busca)||(v.aluno||'').toLowerCase().includes(busca);});
   if (ini) d = d.filter(function(v){return v.data>=ini;});
   if (fim) d = d.filter(function(v){return v.data<=fim;});
@@ -1233,11 +1355,12 @@ function filtrar() {
   if (st) d = d.filter(function(v){return v.st===st;});
   if (mat) d = d.filter(function(v){return v.mat===mat;});
   if (coord) d = d.filter(function(v){return coord==='Outro'?(v.coord&&v.coord.startsWith('Outro')):(v.coord===coord);});
+  if (ciclo) d = d.filter(function(v){return v.ciclo===ciclo;});
   document.getElementById('relTitulo').textContent = '📋 ' + d.length + ' registro(s) encontrado(s)';
   document.getElementById('relTabela').innerHTML = buildTable(d, true, busca);
 }
 function limparFiltros(){
-  ['r-ini','r-fim','r-ano','r-st','r-mat','r-coord'].forEach(id=>{var e=document.getElementById(id);if(e)e.value='';});
+  ['r-ini','r-fim','r-ano','r-st','r-mat','r-coord','r-ciclo'].forEach(id=>{var e=document.getElementById(id);if(e)e.value='';});
   filtrar();
 }
 
@@ -1246,12 +1369,13 @@ function openEdit(idx){
   editIdx=idx;
   const v=DB[idx];if(!v)return;
   const anos=['Grupo 1','Grupo 2','Grupo 3','Grupo 4','Grupo 5','1º Ano','2º Ano','3º Ano','4º Ano','5º Ano','6º Ano','7º Ano','8º Ano','9º Ano','1º ANO EM','2º ANO EM','3º ANO EM'];
+  const ciclos=['Educação Infantil','Fundamental 1','Fundamental 2','Ensino Médio'];
   document.getElementById('modalGrid').innerHTML=
     '<div class="form-group"><label class="form-label">Nome</label><input class="form-control" id="e-nome" value="'+esc(v.nome||'')+'"></div>'+
     '<div class="form-group"><label class="form-label">Telefone</label><input class="form-control" id="e-tel" value="'+esc(v.tel||'')+'"></div>'+
-    
     '<div class="form-group"><label class="form-label">Data</label><input type="date" class="form-control" id="e-data" value="'+(v.data||'')+'"></div>'+
     '<div class="form-group"><label class="form-label">Sala</label><select class="form-control" id="e-sala"><option value="">—</option>'+['Biblioteca','Sala 1','Sala 2','Sala Apoio'].map(s=>'<option'+(s===v.sala?' selected':'')+'>'+s+'</option>').join('')+'</select></div>'+
+    '<div class="form-group"><label class="form-label">Ciclo</label><select class="form-control" id="e-ciclo"><option value="">—</option>'+ciclos.map(c=>'<option'+(c===v.ciclo?' selected':'')+'>'+c+'</option>').join('')+'</select></div>'+
     '<div class="form-group"><label class="form-label">Ano/Turma</label><select class="form-control" id="e-ano">'+anos.map(a=>'<option'+(a===v.ano?' selected':'')+'>'+a+'</option>').join('')+'</select></div>'+
     '<div class="form-group"><label class="form-label">Matriculou</label><select class="form-control" id="e-mat"><option value="">—</option><option'+(v.mat==='Sim'?' selected':'')+'>Sim</option><option'+(v.mat==='Não'?' selected':'')+'>Não</option></select></div>'+
     '<div class="form-group" style="grid-column:1/-1"><label class="form-label">Status</label><select class="form-control" id="e-st">'+['Agendou a entrevista','Realizou a entrevista','Aguardando retorno da agenda','Desistiu','Matriculou em outra Escola','Não Tivemos Retorno'].map(s=>'<option'+(s===v.st?' selected':'')+'>'+s+'</option>').join('')+'</select></div>'+
@@ -1268,6 +1392,7 @@ function salvarEdit(){
     dataagendada:document.getElementById('e-dataagendada')?document.getElementById('e-dataagendada').value:'',
     coord:(function(){var c=document.getElementById('e-coord')?document.getElementById('e-coord').value:'';return c==='Outro'?('Outro: '+(document.getElementById('e-coord-outro')?document.getElementById('e-coord-outro').value:'')):c;}()),
     sala:document.getElementById('e-sala')?document.getElementById('e-sala').value:'',
+    ciclo:document.getElementById('e-ciclo')?document.getElementById('e-ciclo').value:'',
     ano:document.getElementById('e-ano').value,mat:document.getElementById('e-mat').value,
     st:document.getElementById('e-st').value,con:document.getElementById('e-con').value,
     obs:document.getElementById('e-obs').value};
@@ -1309,7 +1434,7 @@ function countBy(field,data){
 function destroy(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
 
 function limparFiltrosGraf(){
-  ['gf-di','gf-df','gf-con','gf-ano'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  ['gf-di','gf-df','gf-con','gf-ano','gf-ciclo'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
   renderCharts();
 }
 function renderCharts(){
@@ -1318,11 +1443,13 @@ function renderCharts(){
   var df=document.getElementById('gf-df')?document.getElementById('gf-df').value:'';
   var gcon=document.getElementById('gf-con')?document.getElementById('gf-con').value:'';
   var gano=document.getElementById('gf-ano')?document.getElementById('gf-ano').value:'';
+  var gciclo=document.getElementById('gf-ciclo')?document.getElementById('gf-ciclo').value:'';
   var DBg=DB.filter(function(v){
     if(di&&v.data&&v.data<di) return false;
     if(df&&v.data&&v.data>df) return false;
     if(gcon&&v.con&&!v.con.toLowerCase().includes(gcon.toLowerCase())) return false;
     if(gano&&v.ano!==gano) return false;
+    if(gciclo&&v.ciclo!==gciclo) return false;
     return true;
   });
 
@@ -1344,6 +1471,18 @@ function renderCharts(){
     type:'pie',
     data:{labels:cmKeys.map(k=>k||'Não informado'),datasets:[{data:Object.values(cm),backgroundColor:cmKeys.map(k=>getColorForKey(k)),borderWidth:3,borderColor:'#fff',hoverOffset:8}]},
     options:{plugins:{legend:{position:'bottom',labels:{font:{family:'DM Sans',size:12},padding:14}},datalabels:{color:'#fff',font:{weight:'bold',size:13},formatter:(val)=>val}},maintainAspectRatio:false}
+  });
+
+  // 2b) Ciclo - Doughnut colorido
+  destroy('cCiclo');
+  const cicloOrder=['Educação Infantil','Fundamental 1','Fundamental 2','Ensino Médio'];
+  const cicloColors=['#8b5cf6','#3b82f6','#10b981','#f59e0b'];
+  const cciclo=countBy('ciclo',DBg);
+  const ccKeys=cicloOrder.filter(c=>cciclo[c]);
+  charts.cCiclo=new Chart(document.getElementById('cCiclo'),{
+    type:'doughnut',
+    data:{labels:ccKeys.length?ccKeys:['Sem dados'],datasets:[{data:ccKeys.length?ccKeys.map(c=>cciclo[c]):[0],backgroundColor:ccKeys.length?cicloColors.slice(0,ccKeys.length):['#94a3b8'],borderWidth:3,borderColor:'#fff',hoverOffset:8}]},
+    options:{plugins:{legend:{position:'right',labels:{font:{family:'DM Sans',size:12},padding:12}},datalabels:{color:'#fff',font:{weight:'bold',size:13},formatter:(val)=>val}},maintainAspectRatio:false,cutout:'60%'}
   });
 
   // 3) Ano/Turma - Bar multicolorido
@@ -1417,7 +1556,8 @@ function renderImpressao(){
       '<div style="padding:10px 14px;display:flex;flex-direction:column;gap:5px">'+
         '<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#94a3b8">👩‍💼 Coordenadora</span><span style="font-weight:700;color:#1e293b">'+esc(coordDisplay(v))+'</span></div>'+
         '<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#94a3b8">🏫 Sala de entrevista</span><span style="font-weight:700;color:#1e293b">'+(v.sala||'—')+'</span></div>'+
-        '<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#94a3b8">🎓 Ano / Turma</span><span style="font-weight:700;color:#1e293b">'+(v.ano||'—')+'</span></div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#94a3b8">🎓 Ciclo</span><span style="font-weight:700;color:#1e293b">'+(v.ciclo||'—')+'</span></div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#94a3b8">📖 Ano / Turma</span><span style="font-weight:700;color:#1e293b">'+(v.ano||'—')+'</span></div>'+
         '<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#94a3b8">📅 Data da Entrevista</span><span style="font-weight:700;color:'+sc+'">'+fmtD(v.dataagendada)+'</span></div>'+
         '<div style="height:1px;background:#f1f5f9;margin:2px 0"></div>'+
         '<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#94a3b8">👤 Responsável</span><span style="font-weight:700;color:#1e293b">'+esc(v.nome||'—')+'</span></div>'+
@@ -1442,7 +1582,8 @@ function buildCardInner(v,sc){
     '<div class="card-body">'+
       '<div class="row-item"><span class="lbl">👩‍💼 Coordenadora</span><span class="val bold">'+esc2(coordDisplay(v))+'</span></div>'+
       '<div class="row-item"><span class="lbl">🏫 Sala de entrevista</span><span class="val bold">'+esc2(v.sala||'—')+'</span></div>'+
-      '<div class="row-item"><span class="lbl">🎓 Ano / Turma</span><span class="val bold">'+esc2(v.ano||'—')+'</span></div>'+
+      '<div class="row-item"><span class="lbl">🎓 Ciclo</span><span class="val bold">'+esc2(v.ciclo||'—')+'</span></div>'+
+      '<div class="row-item"><span class="lbl">📖 Ano / Turma</span><span class="val bold">'+esc2(v.ano||'—')+'</span></div>'+
       '<div class="row-item"><span class="lbl">📅 Data da Entrevista</span><span class="val bold" style="color:'+sc+'">'+fmtD(v.dataagendada)+'</span></div>'+
       '<div class="divider"></div>'+
       '<div class="row-item"><span class="lbl">👤 Responsável</span><span class="val bold">'+esc2(v.nome||'—')+'</span></div>'+
@@ -1548,7 +1689,7 @@ function salvarPDFCartoes(){imprimirCartoes();}
 // ══ ATALHO DO DASHBOARD ══
 function irParaRelatorio(filtro){
   // limpa filtros anteriores
-  ['r-ini','r-fim','r-ano','r-st','r-mat'].forEach(function(id){
+  ['r-ini','r-fim','r-ano','r-st','r-mat','r-coord','r-ciclo'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.value='';
   });
   var busca=document.getElementById('r-busca'); if(busca) busca.value='';
@@ -1581,6 +1722,7 @@ function gerarPDF(){
   var fano  = (document.getElementById('r-ano')||{value:''}).value||'';
   var fst   = (document.getElementById('r-st')||{value:''}).value||'';
   var fmat  = (document.getElementById('r-mat')||{value:''}).value||'';
+  var fciclo= (document.getElementById('r-ciclo')||{value:''}).value||'';
   var bl = busca.toLowerCase();
   if(busca) dados = dados.filter(function(v){return (v.nome||'').toLowerCase().includes(bl)||(v.tel||'').includes(busca)||(v.aluno||'').toLowerCase().includes(bl);});
   if(ini)   dados = dados.filter(function(v){return v.data>=ini;});
@@ -1588,6 +1730,7 @@ function gerarPDF(){
   if(fano)  dados = dados.filter(function(v){return v.ano===fano;});
   if(fst)   dados = dados.filter(function(v){return v.st===fst;});
   if(fmat)  dados = dados.filter(function(v){return v.mat===fmat;});
+  if(fciclo) dados = dados.filter(function(v){return v.ciclo===fciclo;});
   if(!dados.length){ toast('Nenhum dado para gerar o relatório.','r'); return; }
 
   var totalMat  = dados.filter(function(v){return v.mat==='Sim';}).length;
@@ -1614,6 +1757,7 @@ function gerarPDF(){
   if(fano) filtros.push('Turma: '+esc(fano));
   if(fst)  filtros.push('Status: '+esc(fst));
   if(fmat) filtros.push('Matriculou: '+esc(fmat));
+  if(fciclo) filtros.push('Ciclo: '+esc(fciclo));
   var filtroTxt = filtros.length ? filtros.join(' &nbsp;&bull;&nbsp; ') : 'Todos os registros (sem filtros)';
 
   var rows = dados.map(function(v,i){
@@ -1623,6 +1767,7 @@ function gerarPDF(){
       '<td style="padding:8px 11px;border-bottom:1px solid #e2e8f0;font-size:11px;font-weight:600;color:#1e293b">'+esc(v.nome)+'</td>'+
       '<td style="padding:8px 11px;border-bottom:1px solid #e2e8f0;font-size:11px;color:#475569">'+esc(v.aluno||'—')+'</td>'+
       '<td style="padding:8px 11px;border-bottom:1px solid #e2e8f0;font-size:11px;color:#475569">'+esc(v.tel||'—')+'</td>'+
+      '<td style="padding:8px 11px;border-bottom:1px solid #e2e8f0;font-size:11px;color:#475569">'+esc(v.ciclo||'—')+'</td>'+
       '<td style="padding:8px 11px;border-bottom:1px solid #e2e8f0;font-size:11px;white-space:nowrap;color:#1e293b">'+esc(v.ano||'—')+'</td>'+
       '<td style="padding:8px 11px;border-bottom:1px solid #e2e8f0;font-size:11px;color:#475569">'+esc(v.con||'—')+'</td>'+
       '<td style="padding:8px 11px;border-bottom:1px solid #e2e8f0;text-align:center">'+matBadge(v.mat)+'</td>'+
@@ -1735,7 +1880,7 @@ td{vertical-align:middle}
     <table>
       <thead><tr>
         <th>Data</th><th>Nome do Responsável</th><th>Aluno</th><th>Telefone</th>
-        <th>Ano/Turma</th><th>Como Conheceu</th><th>Matriculou</th><th>Status</th><th>Observações</th>
+        <th>Ciclo</th><th>Ano/Turma</th><th>Como Conheceu</th><th>Matriculou</th><th>Status</th><th>Observações</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>
